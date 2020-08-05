@@ -1,0 +1,34 @@
+import { IProcessStatesClient } from '../../src/version1/IProcessStatesClient';
+import { IProcessStatesPersistence } from 'pip-services-processstates-node';
+export declare class ProcessStatesClientV1Fixture {
+    private _client;
+    private _persistence;
+    constructor(client: IProcessStatesClient, persistence: IProcessStatesPersistence);
+    testCrudOperations(done: any): void;
+    testGetProcessbynullId(done: any): void;
+    testContinueProcess(done: any): void;
+    testTryContinueProcessWithnotExistId(done: any): void;
+    testTryContinueProcessWithNullId(done: any): void;
+    testAbortProces(done: any): void;
+    testContinuieWithRecoveryProcess(done: any): void;
+    testCompleteProcess(done: any): void;
+    testRequestForResponseProcess(done: any): void;
+    testRollbackProcessWithStatusRunning(done: any): void;
+    testRollbackProcessWithStateStarting(done: any): void;
+    testFailProcess(done: any): void;
+    testFailWithRecoveryProcess(done: any): void;
+    testContinueForFailProcess(done: any): void;
+    testRepeatRecoveryProcess(done: any): void;
+    testReturnErrorIfProcessStateDontEqualStarting(done: any): void;
+    testStart(done: any): void;
+    testStartOrActivateProcess(done: any): void;
+    testReturnErrorIfResumeStartedWithoutProcess(done: any): void;
+    testReturnErrorIfResumeStartedWithoutProcessId(done: any): void;
+    testReturnErrorIfProcessTypeNull(done: any): void;
+    testReturnErrorIfProcessKeyNull(done: any): void;
+    testResumeWithoutCompletedTasksProcess(done: any): void;
+    testResumeWithCompletedTasksProcess(done: any): void;
+    testClearRecoveryMessageInProcess(done: any): void;
+    testUpdateProcess(done: any): void;
+    testDeleteProcess(done: any): void;
+}
