@@ -444,7 +444,8 @@ class ProcessStatesClientV1Fixture {
                 this._persistence.getOneById(null, process.id, (err, processResult) => {
                     assert.isNull(err);
                     assert.equal(process.id, processResult.id);
-                    assert.equal(messageEnvelop, processResult.recovery_message);
+                    assert.equal(messageEnvelop.correlation_id, processResult.recovery_message.correlation_id);
+                    assert.equal(messageEnvelop.message_type, processResult.recovery_message.message_type);
                     assert.equal("queue name", processResult.recovery_queue_name);
                     callback();
                 });
@@ -553,28 +554,9 @@ class ProcessStatesClientV1Fixture {
         });
     }
     testStart(done) {
-        let process = new pip_services_processstates_node_1.ProcessStateV1();
-        process.id = "id";
-        process.lock_token = "token";
-        process.type = "type";
-        process.locked_until_time = new Date();
-        process.status = pip_services_processstates_node_1.ProcessStatusV1.Starting;
-        async.series([
-            (callback) => {
-                this._persistence.create(null, process, (err, item) => {
-                    assert.isNull(err);
-                    process = item;
-                    callback();
-                });
-            },
-            (callback) => {
-                this._client.startProcess(null, "type", "key", "type", null, null, null, (err, processResult) => {
-                    assert.isNull(err);
-                    assert.equal(pip_services_processstates_node_1.ProcessStatusV1.Starting, processResult.status);
-                    callback();
-                });
-            }
-        ], (err) => {
+        this._client.startProcess(null, "type", "key", "type", null, null, 0, (err, processResult) => {
+            assert.isNull(err);
+            assert.equal(pip_services_processstates_node_1.ProcessStatusV1.Starting, processResult.status);
             done(err);
         });
     }
@@ -675,6 +657,7 @@ class ProcessStatesClientV1Fixture {
         process.status = pip_services_processstates_node_1.ProcessStatusV1.Suspended;
         process.tasks = new Array();
         let task = new pip_services_processstates_node_1.TaskStateV1();
+        task.type = "task.type";
         task.status = pip_services_processstates_node_1.TaskStatusV1.Completed;
         task.queue_name = "activity queue name";
         process.tasks.push(task);
@@ -682,7 +665,6 @@ class ProcessStatesClientV1Fixture {
             (callback) => {
                 this._persistence.create(null, process, (err, item) => {
                     assert.isNull(err);
-                    process = item;
                     callback();
                 });
             },

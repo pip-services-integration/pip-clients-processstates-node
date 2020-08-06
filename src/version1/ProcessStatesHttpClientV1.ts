@@ -23,7 +23,6 @@ export class ProcessStatesHttpClientV1 extends CommandableHttpClient implements 
         );
     }
 
-
     getProcessById(correlationId: string, processId: string, callback: (err: any, state: ProcessStateV1) => void): void {
         this.callCommand(
             'get_process_by_id',

@@ -172,7 +172,7 @@ export class ProcessStatesClientV1Fixture {
         let process: ProcessStateV1 = new ProcessStateV1();
         process.id = "id";
         process.lock_token = "token";
-        process.type ="type";
+        process.type = "type";
         process.locked_until_time = new Date();
         process.status = ProcessStatusV1.Running;
         this._persistence.create(null, process, (err, item) => {
@@ -600,30 +600,11 @@ export class ProcessStatesClientV1Fixture {
 
 
     public testStart(done) {
-        let process: ProcessStateV1 = new ProcessStateV1();
-        process.id = "id";
-        process.lock_token = "token";
-        process.type = "type";
-        process.locked_until_time = new Date();
-        process.status = ProcessStatusV1.Starting;
-
-        async.series([
-            (callback) => {
-                this._persistence.create(null, process, (err, item) => {
-                    assert.isNull(err);
-                    process = item;
-                    callback();
-                })
-            },
-            (callback) => {
-                this._client.startProcess(null, "type", "key", "type", null, null, null, (err, processResult) => {
-                    assert.isNull(err);
-                    assert.equal(ProcessStatusV1.Starting, processResult.status);
-                    callback();
-                });
-            }], (err) => {
-                done(err);
-            });
+        this._client.startProcess(null, "type", "key", "type", null, null, 0, (err, processResult) => {
+            assert.isNull(err);
+            assert.equal(ProcessStatusV1.Starting, processResult.status);
+            done(err);
+        });
     }
 
     public testStartOrActivateProcess(done) {
@@ -734,6 +715,7 @@ export class ProcessStatesClientV1Fixture {
         process.status = ProcessStatusV1.Suspended;
         process.tasks = new Array<TaskStateV1>();
         let task: TaskStateV1 = new TaskStateV1();
+        task.type = "task.type";
         task.status = TaskStatusV1.Completed;
         task.queue_name = "activity queue name";
         process.tasks.push(task);
@@ -742,7 +724,6 @@ export class ProcessStatesClientV1Fixture {
             (callback) => {
                 this._persistence.create(null, process, (err, item) => {
                     assert.isNull(err);
-                    process = item;
                     callback();
                 })
             },
